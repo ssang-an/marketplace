@@ -3,65 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agent Pizza Marketplace</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet" />
+    <title>AI Agent Pizza Marketplace</title>
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
-    <div class="bg-shape bg-shape-left" aria-hidden="true"></div>
-    <div class="bg-shape bg-shape-right" aria-hidden="true"></div>
-
-    <header class="global-header card">
-      <div class="global-inner">
-        <div class="global-brand">AI Agent Pizza Marketplace</div>
-        <nav class="global-tabs" aria-label="Global Navigation">
-          <a href="./home.html">Home</a>
-          <a href="./index.html" class="active">Marketplace</a>
-          <a href="./tool-studio.html">Tool Studio</a>
-          <a href="./skills.html">Skills</a>
-          <a href="./knowledge-goodocs.html">Knowledge Goodocs</a>
-        </nav>
-      </div>
-    </header>
-
-    <main class="layout">
-      <section class="hero card">
-        <p class="eyebrow">사내 AI Agent Tool Marketplace</p>
-        <h2>AI Agent Tools</h2>
-        <p>
-          AI Agent Pizza에서 사용하는 검증된 MCP를 한 곳에서 검색하고, 비교하고,
-          설치 요청까지 연결하세요.
-        </p>
-
-        <div class="search-row">
-          <input id="searchInput" type="search" placeholder="도구 이름, 태그, 팀으로 검색" />
-          <button class="btn solid">검색</button>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">AI Agent Pizza</p>
+          <h1>PIZZA TOOL LIST</h1>
+          <p class="hero-text">
+            AI가 수행가능한 업무를 빠르게 찾아보세요.
+          </p>
         </div>
+      </header>
 
-        <div class="filter-sort-row">
-          <div class="chip-row" id="chipRow">
-            <button class="chip active" data-filter="all">전체</button>
+      <main class="marketplace">
+        <section class="page-tabs card">
+          <button class="page-tab active" type="button" data-page-tab="tools">도구 목록</button>
+          <button class="page-tab" type="button" data-page-tab="history">대화 이력</button>
+        </section>
+
+        <section class="page-panel active" id="toolsPanel">
+        <section class="toolbar card">
+          <div class="toolbar-copy">
+            <p class="eyebrow">Tools</p>
+            <h2>도구 탐색</h2>
           </div>
-          <div class="control-row">
-            <label for="sortSelect">정렬</label>
-            <select id="sortSelect">
+
+          <div class="search-row">
+            <input id="searchInput" type="search" placeholder="도구 이름, 설명, 팀, key로 검색" />
+            <select id="sortSelect" aria-label="정렬 기준">
               <option value="usecount_desc">사용량 많은 순</option>
               <option value="toolname_asc">도구명 오름차순</option>
             </select>
           </div>
-        </div>
-      </section>
 
-      <section class="grid" id="toolGrid"></section>
+          <div class="chip-row" id="chipRow">
+            <button class="chip active" data-filter="all">전체</button>
+          </div>
+        </section>
 
-      <section class="submit card">
-        <h3>도구 제안</h3>
-        <p>새 MCP를 등록하거나 기존 MCP 개선 요청을 남겨보세요.</p>
-        <button class="btn solid">제안서 작성</button>
-      </section>
-    </main>
+        <section class="results-head">
+          <div>
+            <p class="results-label">Results</p>
+            <h3 id="resultsTitle">전체 도구</h3>
+          </div>
+          <p class="results-meta" id="resultsMeta">0개 도구</p>
+        </section>
+
+        <section class="grid" id="toolGrid"></section>
+        </section>
+
+        <section class="page-panel" id="historyPanel">
+          <section class="history-shell card">
+            <div class="history-head">
+              <div>
+                <p class="eyebrow">History</p>
+                <h2>대화 이력</h2>
+              </div>
+              <p class="history-meta" id="historyMeta">0개 대화</p>
+            </div>
+
+            <div class="history-toolbar">
+              <input id="historySearchInput" type="search" placeholder="대화 제목, 질문, 답변, tool로 검색" />
+              <div class="history-filter-row">
+                <select id="historyToolFilter" aria-label="대화 이력 tool 필터">
+                  <option value="all">전체 TOOL</option>
+                </select>
+                <select id="historySkillFilter" aria-label="대화 이력 skill 필터">
+                  <option value="all">전체 SKILL</option>
+                </select>
+                <select id="historySkillUsageFilter" aria-label="대화 이력 skill 사용 여부 필터">
+                  <option value="all">SKILL 사용 전체</option>
+                  <option value="used">SKILL 사용</option>
+                  <option value="unused">SKILL 없음</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="history-list" id="historyList"></div>
+          </section>
+        </section>
+      </main>
+    </div>
 
     <div class="modal hidden" id="toolModal" role="dialog" aria-modal="true" aria-labelledby="modalToolName">
       <div class="modal-backdrop" data-close-modal="true"></div>
@@ -71,39 +96,52 @@
             <span id="modalCategory" class="modal-category-chip">-</span>
             <span id="modalUsecount" class="modal-usecount-chip">use -</span>
           </div>
-          <button class="modal-close" id="modalCloseBtn" aria-label="닫기">닫기</button>
+          <button class="modal-close" id="modalCloseBtn" aria-label="닫기" type="button">닫기</button>
         </div>
+
         <div class="modal-title-row">
-          <h3 id="modalToolName">-</h3>
+          <div>
+            <p class="modal-kicker">Detail</p>
+            <h3 id="modalToolName">-</h3>
+          </div>
           <span id="modalDeveloper" class="modal-developer-inline">-</span>
         </div>
+
         <p id="modalDescription" class="modal-description">-</p>
+
         <div class="modal-tab-row">
-          <button type="button" class="modal-tab active" data-tab="api">API Code Copy</button>
-          <button type="button" class="modal-tab" data-tab="source">Source Code</button>
+          <button type="button" class="modal-tab active" data-tab="api">API Payload</button>
+          <button type="button" class="modal-tab" data-tab="source">Python Sample</button>
         </div>
 
         <section class="modal-pane active" id="apiPane">
-          <h4>Key 목록</h4>
-          <pre id="modalKeys">-</pre>
-          <h4>API 호출</h4>
-          <div class="api-call-box">
-            <p class="api-url">POST pizza.skhynix.com/api/pizza/get-context</p>
-            <label class="api-query-label" for="apiQueryInput">query</label>
-            <input id="apiQueryInput" class="api-query-input" type="text" placeholder="user 프롬프트 입력" />
-            <pre id="apiPayloadPreview">-</pre>
-            <div class="api-actions">
-              <button class="btn ghost" id="copyApiBtn" type="button">API Copy</button>
-              <span id="copyApiStatus" class="copy-status" aria-live="polite"></span>
+          <div class="detail-grid">
+            <div class="detail-card">
+              <p class="detail-label">Required Keys</p>
+              <pre id="modalKeys">-</pre>
             </div>
+            <div class="detail-card">
+              <p class="detail-label">Query</p>
+              <input id="apiQueryInput" class="api-query-input" type="text" placeholder="예: A라인 다운 설비 10분 이상 조회" />
+            </div>
+          </div>
+          <div class="code-card">
+            <div class="code-head">
+              <p class="detail-label">POST payload</p>
+              <button class="btn ghost" id="copyApiBtn" type="button">복사</button>
+            </div>
+            <pre id="apiPayloadPreview">-</pre>
+            <span id="copyApiStatus" class="copy-status" aria-live="polite"></span>
           </div>
         </section>
 
         <section class="modal-pane" id="sourcePane">
-          <h4>Python Source Code</h4>
-          <pre id="sourceCodePreview">-</pre>
-          <div class="api-actions">
-            <button class="btn ghost" id="copySourceBtn" type="button">Source Copy</button>
+          <div class="code-card">
+            <div class="code-head">
+              <p class="detail-label">Python example</p>
+              <button class="btn ghost" id="copySourceBtn" type="button">복사</button>
+            </div>
+            <pre id="sourceCodePreview">-</pre>
             <span id="copySourceStatus" class="copy-status" aria-live="polite"></span>
           </div>
         </section>
